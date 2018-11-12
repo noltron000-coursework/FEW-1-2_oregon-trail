@@ -6,13 +6,17 @@ class Galleon {
 
 		// Boat Stock
 		this.crew = crew;
-		this.fuel = fuel;
 		this.food = food;
+		this.fuel = fuel;
 		this.gold = gold;
 		this.cannons = cannons;
 		this.plating = plating;
 
-		// boat properties
+		// Boat space-time continuum
+		this.mile = mile; // current mile
+		this.time = time; // weeks in open air
+
+		// Boat properties
 		this.weight // calculated variable
 			= this.crew * config.weight.crew
 			+ this.fuel * config.weight.fuel
@@ -20,39 +24,39 @@ class Galleon {
 			+ this.gold * config.weight.gold
 			+ this.cannons * config.weight.cannons
 			+ this.plating * config.weight.plating;
-		this.weightMax = weightMax; // default 1,000,000lbs
-
-		this.speed = speed; // calculated
+		this.weightMax = weightMax; // default 1,000,000 lbs
+		this.speed // calculated variable
+			= this.prepEngine()
+			* (3 / 2 - this.weight / this.weightMax)
 		this.speedMax = speedMax; // 60mph
-
 	}
 
+	prepEngine() { // GOAL: Make it an S curve
+		console.log("REVVING THE ENGINE")
+		this.fuel -= 1
+		return 1
+	}
+
+	dropItem() {
+		// need to ask user for input
+		console.log("ASK FOR ITEM-DROP INPUT")
+	}
 
 	updateWeight() {
-		let droppedFood = 0;
-		let droppedFuel = 0;
-		let droppedGold = 0;
-		let droppedCrew = 0;
-		let droppedCannons = 0;
-		let droppedPlating = 0;
-
 		while (weight > weightMax) {
 			this.askToDrop()
-			this.weightMax
-			this.crew * config.weightCrew
 			break
 		}
 	}
 
-	calculateWeight() {
+	feedCrew() {
+		this.food -= this.crew
 	}
 
-	updateFood() {
 
-	}
 
-	updateDistance() {
-
+	prepEngine() {
+		const speedMult = 1.5 - this.weight / this.weightMax
 	}
 }
 
