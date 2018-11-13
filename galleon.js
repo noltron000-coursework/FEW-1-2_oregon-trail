@@ -1,7 +1,5 @@
-var OregonH = OregonH || {};
-
 class Galleon {
-	constructor(name) {
+	constructor(name, crew, food, fuel, gold, cannons, plating, weightMax, speedMax) {
 		this.name = name;
 
 		// Boat Stock
@@ -12,102 +10,82 @@ class Galleon {
 		this.cannons = cannons;
 		this.plating = plating;
 
+		// // Boat Stock
+		// this.supplies = {
+		// 	crew: crew,
+		// 	fodo: food,
+		// 	fuel: fuel,
+		// 	gold: gold,
+		// 	cannons: cannons,
+		// 	plating: plating
+		// }
+
 		// Boat space-time continuum
-		this.mile = mile; // current mile
-		this.time = time; // weeks in open air
+		this.mile = 0; // current mile
+		this.days = 0; // weeks in open air
 
 		// Boat properties
 		this.weight // calculated variable
-			= this.crew * config.weight.crew
-			+ this.fuel * config.weight.fuel
-			+ this.food * config.weight.food
-			+ this.gold * config.weight.gold
-			+ this.cannons * config.weight.cannons
-			+ this.plating * config.weight.plating;
+			= this.crew * config.crew
+			+ this.fuel * config.fuel
+			+ this.food * config.food
+			+ this.gold * config.gold
+			+ this.cannons * config.cannons
+			+ this.plating * config.plating;
 		this.weightMax = weightMax; // default 1,000,000 lbs
-		this.speed // calculated variable
-			= this.prepEngine()
-			* (3 / 2 - this.weight / this.weightMax)
-		this.speedMax = speedMax; // 60mph
+		this.speed = 0; // updated variable
+		this.speedMax = speedMax; // usually 60 mpd
 	}
 
-	prepEngine() { // GOAL: Make it an S curve
-		console.log("REVVING THE ENGINE")
-		this.fuel -= 1
-		return 1
-	}
-
-	dropItem() {
+	queryStockType() {
 		// need to ask user for input
-		console.log("ASK FOR ITEM-DROP INPUT")
+		console.log("ASK FOR STOCK-TYPE INPUT");
+		return "gold" // must return a type of item
 	}
 
-	updateWeight() {
-		while (weight > weightMax) {
-			this.askToDrop()
-			break
+	queryDropItems() {
+		// need to ask user for input
+		console.log("ASK FOR ITEM-DROP INPUT");
+		return 1 // must return number of items dropped
+	}
+
+	queryFuelCores() {
+		// need to ask user for input
+		console.log("ASK FOR FUEL-CORE INPUT");
+		return 1 // must return number of cores used up
+	}
+
+	ƒLogistics(x) { // check https://en.wikipedia.org/wiki/Logistic_function
+		const y = 1 / (1 + Math.E ** (-2 * (x - 3)))
+		return y
+	}
+
+	checkDinner() { // feed the crew
+		this.food -= this.crew
+		this.food = Math.max(0, this.food)
+	}
+
+	checkWeight() { // checkWeight ensures the weight of the vessel
+		while (this.weight > this.weightMax) {
+			const stockType = this.queryStockType();
+			if (this.supply[stockType]) {
+				const dropItems = this.queryDropItems();
+				this.supply[stockType] -= dropItems
+			}
 		}
 	}
 
-	feedCrew() {
-		this.food -= this.crew
+	checkEngine() { // checkEngine sets up the current speed of the vessel
+		const fuelCores = this.queryFuelCores();
+		this.fuel -= fuelCores
+		this.speed = this.ƒLogistics(fuelCores) * this.speedMax;
 	}
 
-
-
-	prepEngine() {
-		const speedMult = 1.5 - this.weight / this.weightMax
+	setSail() {
+		this.checkDinner();
+		this.checkWeight();
+		this.checkEngine();
+		this.days += 1;
+		this.mile += this.speed;
 	}
 }
-
-myShip = new Galleon("Salvation")
-
-console.log(myShip)
-
-
-// //update weight and capacity
-// OregonH.Caravan.updateWeight = function () {
-// 	var droppedFood = 0;
-// 	var droppedGuns = 0;
-
-// 	//how much can the caravan carry
-// 	this.capacity = this.oxen * OregonH.WEIGHT_PER_OX + this.crew * OregonH.WEIGHT_PER_PERSON;
-
-// 	//how much weight do we currently have
-// 	this.weight = this.food * OregonH.FOOD_WEIGHT + this.firepower * OregonH.FIREPOWER_WEIGHT;
-
-// 	//drop things behind if it's too much weight
-// 	//assume guns get dropped before food
-// 	while (this.firepower && this.capacity <= this.weight) {
-// 		this.firepower--;
-// 		this.weight -= OregonH.FIREPOWER_WEIGHT;
-// 		droppedGuns++;
-// 	}
-
-// 	if (droppedGuns) {
-// 		this.ui.notify('Left ' + droppedGuns + ' guns behind', 'negative');
-// 	}
-
-// 	while (this.food && this.capacity <= this.weight) {
-// 		this.food--;
-// 		this.weight -= OregonH.FOOD_WEIGHT;
-// 		droppedFood++;
-// 	}
-
-// 	if (droppedFood) {
-// 		this.ui.notify('Left ' + droppedFood + ' food provisions behind', 'negative');
-// 	}
-// };
-
-// //update covered distance
-// OregonH.Caravan.updateDistance = function () {
-// 	//the closer to capacity, the slower
-// 	var diff = this.capacity - this.weight;
-// 	var speed = OregonH.SLOW_SPEED + diff / this.capacity * OregonH.FULL_SPEED;
-// 	this.distance += speed;
-// };
-
-// //food consumption
-// OregonH.Caravan.consumeFood = function () {
-// 	this.food -= this.crew * OregonH.FOOD_PER_PERSON;
-// };
