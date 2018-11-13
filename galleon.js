@@ -81,9 +81,33 @@ class Galleon {
 		this.speed = this.ƒLogistics(fuelCores) * this.speedMax;
 	}
 
+	checkStatus() {
+		// First check situations where the player has lost.
+		if (this.plating == 0) { // ran out of hull plating
+			return false
+		}
+		else if (this.crew == 0) { // ran out of crew
+			return false
+		}
+		else if (this.food == 0) { // ran out of food
+			return false
+		}
+		else if (this.fuel == 0) { // ran out of fuel
+			return false
+		}
+		// now check if the player could have won the game.
+		else if (this.mile >= config.finalMile) { // you have won!
+			return true
+		}
+		else { // nothing has happened
+			return undefined
+		}
+	}
+
 	setSail() {
 		this.checkDinner();
 		this.checkWeight();
+		this.checkStatus();
 		this.checkEngine();
 		this.days += 1;
 		this.mile += this.speed;
