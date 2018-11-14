@@ -1,5 +1,6 @@
 class Galleon {
-	constructor(name, crew, food, fuel, gold, cannons, plating, weightMax, speedMax) {
+	constructor(name, crew, food, fuel, gold, cannons, plating, maxWeight, maxSpeed) {
+		// Boat Name
 		this.name = name;
 
 		// Boat Stock
@@ -10,106 +11,108 @@ class Galleon {
 		this.cannons = cannons;
 		this.plating = plating;
 
-		// // Boat Stock
-		// this.supplies = {
-		// 	crew: crew,
-		// 	fodo: food,
-		// 	fuel: fuel,
-		// 	gold: gold,
-		// 	cannons: cannons,
-		// 	plating: plating
-		// }
+		// Persistant Delta Variables
+		this.reactor = 3; // amount of fuel used in reactor for today
+		this.bellies = 15; // amount of food fed to the crewmates
+		this.dropStock = 0; // type of food to drop
+		this.typeStock = ''; // amount of food to drop
 
 		// Boat space-time continuum
-		this.mile = 0; // current mile
-		this.days = 0; // weeks in open air
+		this.odometer = 0; // current mile
+		this.duration = 0; // current day
 
 		// Boat properties
-		this.weight // calculated variable
+		this.weight = 0
+		this.speed = 0; // updated variable
+		this.maxWeight = maxWeight; // default 1,000,000 lbs
+		this.maxSpeed = maxSpeed; // usually 60 mpd
+	}
+
+	queryTypeStock() {
+		const typeStock = prompt("Enter a type of supplies...");
+		// ENSURE QUANTITY IS A STRING THAT FITS
+		// Dropdown?
+		return typeStock // must return a type of item
+	}
+
+	queryDropStock() {
+		const dropStock = prompt("Enter an amount of supplies to drop...");
+		// ENSURE QUANTITY IS AN INTEGER
+		// Slider?
+		return dropStock // must return number of items dropped
+	}
+
+	queryFuelCores() {
+		const fuelCores = prompt("Enter an amount of fuel cores...");
+		// ENSURE QUANTITY IS AN INTEGER
+		// Slider?
+		return fuelCores // must return number of cores used up
+	}
+
+	queryRationAmt() {
+		const rationAmt = prompt("Enter an amount of food to be rationed...");
+		// FIGURE OUT DATATYPE
+		// Slider?
+		return rationAmt
+	}
+
+	getWeight() { // DONE
+		const newWeight // calculating new weight
 			= this.crew * config.crew
 			+ this.fuel * config.fuel
 			+ this.food * config.food
 			+ this.gold * config.gold
 			+ this.cannons * config.cannons
 			+ this.plating * config.plating;
-		this.weightMax = weightMax; // default 1,000,000 lbs
-		this.speed = 0; // updated variable
-		this.speedMax = speedMax; // usually 60 mpd
+		return newWeight
 	}
 
-	queryStockType() {
-		// need to ask user for input
-		console.log("ASK FOR STOCK-TYPE INPUT");
-		return "gold" // must return a type of item
+	getSpeed() { // TODO
+		const newSpeed // calculating new speed
+			= this.maxSpeed
+			* this.reactor
+			/ 6
+		return newSpeed
 	}
 
-	queryDropItems() {
-		// need to ask user for input
-		console.log("ASK FOR ITEM-DROP INPUT");
-		return 1 // must return number of items dropped
-	}
-
-	queryFuelCores() {
-		// need to ask user for input
-		console.log("ASK FOR FUEL-CORE INPUT");
-		return 1 // must return number of cores used up
-	}
-
-	ƒLogistics(x) { // check https://en.wikipedia.org/wiki/Logistic_function
-		const y = 1 / (1 + Math.E ** (-2 * (x - 3)))
-		return y
-	}
-
-	checkDinner() { // feed the crew
+	updatePantry() { // TODO
 		this.food -= this.crew
 		this.food = Math.max(0, this.food)
 	}
 
-	checkWeight() { // checkWeight ensures the weight of the vessel
-		while (this.weight > this.weightMax) {
-			const stockType = this.queryStockType();
-			if (this.supply[stockType]) {
-				const dropItems = this.queryDropItems();
-				this.supply[stockType] -= dropItems
+	updateWeight() { // TODO
+		this.weight = this.getWeight()
+		while (this.weight > this.maxWeight) {
+			this.typeStock = this.queryTypeStock();
+			this.dropStock = this.queryDropStock();
+			for (let property in this) {
+				console.log(property)
 			}
+			this.weight = this.getWeight();
+			break;
 		}
 	}
 
-	checkEngine() { // checkEngine sets up the current speed of the vessel
-		const fuelCores = this.queryFuelCores();
-		this.fuel -= fuelCores
-		this.speed = this.ƒLogistics(fuelCores) * this.speedMax;
-	}
-
-	checkStatus() {
-		// First check situations where the player has lost.
-		if (this.plating == 0) { // ran out of hull plating
-			return false
-		}
-		else if (this.crew == 0) { // ran out of crew
-			return false
-		}
-		else if (this.food == 0) { // ran out of food
-			return false
-		}
-		else if (this.fuel == 0) { // ran out of fuel
-			return false
-		}
-		// now check if the player could have won the game.
-		else if (this.mile >= config.finalMile) { // you have won!
-			return true
-		}
-		else { // nothing has happened
-			return undefined
-		}
+	updateEngine() { // checkEngine sets up the current speed of the vessel
+		this.reactor = this.queryFuelCores();
+		console.log(this.fuel)
+		this.fuel -= this.reactor
+		console.log(this.fuel)
+		this.getSpeed()
 	}
 
 	setSail() {
-		this.checkDinner();
-		this.checkWeight();
-		this.checkStatus();
-		this.checkEngine();
-		this.days += 1;
-		this.mile += this.speed;
+		// Ensure everyone is fed
+		this.updatePantry();
+
+		// Check if you would like to drop anything
+		this.updateWeight();
+
+		// Set up the reactor speed
+		this.updateEngine();
+
+		// update time and distances
+		this.duration += 1;
+		this.odometer += this.speed;
 	}
 }

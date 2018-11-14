@@ -4,20 +4,26 @@ class Game {
 	}
 
 	initEvent() {
+		console.log("wowser, first event")
 
 	}
 
 	randEvent() {
-
+		console.log("random event")
+		this.ship.cannons += 50000
 	}
 
-	gameLoop() {
+	loop() {
 		if (this.ship.days == 0) {
 			this.initEvent();
-			this.ship.setSail();
 		} else {
 			this.randEvent();
-			this.ship.setSail();
 		}
+		const status = this.ship.setSail()
+		console.log(status)
+		if (status != undefined) {
+			return status
+		}
+		this.loop()
 	}
 }

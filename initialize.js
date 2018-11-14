@@ -6,8 +6,8 @@ const boat = {
 	gold: 50,
 	cannons: 3,
 	plating: 3,
-	weightMax: 1000000,
-	speedMax: 90,
+	maxWeight: 1000000,
+	maxSpeed: 90,
 };
 
 const Salvation = new Galleon(
@@ -18,8 +18,10 @@ const Salvation = new Galleon(
 	boat.gold,
 	boat.cannons,
 	boat.plating,
-	boat.weightMax,
-	boat.speedMax
+	boat.maxWeight,
+	boat.maxSpeed
 );
+
+const G = new Game(Salvation)
 
 console.log(Salvation)
