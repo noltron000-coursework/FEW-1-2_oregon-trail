@@ -13,9 +13,9 @@ class Galleon {
 
 		// Persistant Delta Variables
 		this.reactor = 3; // amount of fuel used in reactor for today
-		this.bellies = 15; // amount of food fed to the crewmates
-		this.dropStock = 0; // type of food to drop
-		this.typeStock = ''; // amount of food to drop
+		this.eatRate = 15; // amount of food fed to the crewmates
+		this.dropStock = 0; // type of supplies to drop
+		this.typeStock = ''; // amount of supplies to drop
 
 		// Boat space-time continuum
 		this.odometer = 0; // current mile
@@ -29,17 +29,29 @@ class Galleon {
 	}
 
 	queryTypeStock() {
-		const typeStock = prompt("Enter a type of supplies...");
-		// ENSURE QUANTITY IS A STRING THAT FITS
-		// Dropdown?
-		return typeStock // must return a type of item
+		alert("You are dropping supplies. What do you want to drop?");
+		const typeStock = prompt("Enter a type of supplies...\n\nValid Choices:\nfuel\nfood\ncrew\ngold\ncannons\nplating");
+
+		for (let supplies in this) {
+			console.log(supplies);
+			if (typeStock.toLowerCase() === supplies.toLowerCase()) {
+				return typeStock
+			}
+		}
+		alert("INVALID INPUT - TRY AGAIN");
+		return this.queryTypeStock()
 	}
 
 	queryDropStock() {
-		const dropStock = prompt("Enter an amount of supplies to drop...");
-		// ENSURE QUANTITY IS AN INTEGER
-		// Slider?
-		return dropStock // must return number of items dropped
+		try {
+			alert("You are dropping supplies. How much do you want to drop?")
+			let dropStock = prompt("Enter an amount of supplies to drop...");
+			dropStock = parseInt(Number(dropStock));
+			return dropStock
+		} catch {
+			alert("INVALID INPUT - TRY AGAIN!!!!");
+			return this.queryDropStock()
+		}
 	}
 
 	queryFuelCores() {
@@ -49,12 +61,8 @@ class Galleon {
 		return fuelCores // must return number of cores used up
 	}
 
-	queryRationAmt() {
-		const rationAmt = prompt("Enter an amount of food to be rationed...");
-		// FIGURE OUT DATATYPE
-		// Slider?
-		return rationAmt
-	}
+	// queryRationAmt() {
+	// }
 
 	getWeight() { // DONE
 		const newWeight // calculating new weight
@@ -71,22 +79,22 @@ class Galleon {
 		const newSpeed // calculating new speed
 			= this.maxSpeed
 			* this.reactor
-			/ 6
+			/ 6;
 		return newSpeed
 	}
 
 	updatePantry() { // TODO
-		this.food -= this.crew
-		this.food = Math.max(0, this.food)
+		this.food -= this.crew;
+		this.food = Math.max(0, this.food);
 	}
 
 	updateWeight() { // TODO
-		this.weight = this.getWeight()
+		this.weight = this.getWeight();
 		while (this.weight > this.maxWeight) {
 			this.typeStock = this.queryTypeStock();
 			this.dropStock = this.queryDropStock();
 			for (let property in this) {
-				console.log(property)
+				console.log(property);
 			}
 			this.weight = this.getWeight();
 			break;
@@ -95,9 +103,7 @@ class Galleon {
 
 	updateEngine() { // checkEngine sets up the current speed of the vessel
 		this.reactor = this.queryFuelCores();
-		console.log(this.fuel)
-		this.fuel -= this.reactor
-		console.log(this.fuel)
+		this.fuel -= this.reactor;
 		this.getSpeed()
 	}
 
