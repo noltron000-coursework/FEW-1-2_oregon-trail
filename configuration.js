@@ -8,12 +8,12 @@ const config = {
 	plating: 3000, // Weight of extra padding
 
 	// Resource Consumption
-	foodRate: 15, // in pounds
+	hungerLvl: 15, // in pounds
 
 	// Game Settings
 	gameCycle: 800, // milliseconds
-	eventRate: 0.15, // probability
-	finalMile: 10000, // final goal
+	eventRate: 0.15, // probability of events
+	finalMile: 10000, // final goal, in miles
 	//
 }
 

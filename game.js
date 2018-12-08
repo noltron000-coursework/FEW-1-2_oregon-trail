@@ -1,3 +1,6 @@
+
+
+
 class Game {
 	constructor(ship) {
 		this.ship = ship;
@@ -5,12 +8,10 @@ class Game {
 
 	initEvent() {
 		console.log("wowser, first event")
-
 	}
 
 	randEvent() {
 		console.log("random event")
-		this.ship.cannons += 50000
 	}
 
 	objective() {
@@ -32,11 +33,11 @@ class Game {
 			return true
 		}
 		else { // nothing has happened
-			return undefined
+			return null
 		}
 	}
 
-	loop() {
+	gameLoop() {
 		if (this.ship.days == 0) {
 			this.initEvent();
 		} else {
@@ -48,6 +49,6 @@ class Game {
 		if (status != undefined) {
 			return status
 		}
-		this.loop()
+		this.gameLoop()
 	}
 }

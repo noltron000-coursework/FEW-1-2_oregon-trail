@@ -91,7 +91,10 @@ class Galleon {
 	updateWeight() { // TODO
 		this.weight = this.getWeight();
 		while (this.weight > this.maxWeight) {
+			// TODO: show total stock of items.
+			// TODO: show dropdowns of items.
 			this.typeStock = this.queryTypeStock();
+			// TODO: show updown counter of quantity.
 			this.dropStock = this.queryDropStock();
 			for (let property in this) {
 				console.log(property);
